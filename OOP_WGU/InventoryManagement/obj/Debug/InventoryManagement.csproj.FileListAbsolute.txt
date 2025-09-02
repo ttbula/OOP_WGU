@@ -9,3 +9,4 @@ C:\WGU\C#\OOP_WGU\OOP_WGU\InventoryManagement\obj\Debug\InventoryManagement.cspr
 C:\WGU\C#\OOP_WGU\OOP_WGU\InventoryManagement\obj\Debug\InventoryManagement.exe
 C:\WGU\C#\OOP_WGU\OOP_WGU\InventoryManagement\obj\Debug\InventoryManagement.pdb
 C:\WGU\C#\OOP_WGU\OOP_WGU\InventoryManagement\obj\Debug\InventoryManagement.exe.config
+C:\WGU\C#\OOP_WGU\OOP_WGU\InventoryManagement\obj\Debug\InventoryManagement.AddPartForm.resources

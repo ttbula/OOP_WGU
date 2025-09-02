@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InventoryManagement.Models
 {
-   internal class Part
+   public abstract class Part
    {
       public int ID { get; set; }
       public string Name { get; set; }

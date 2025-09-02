@@ -230,7 +230,7 @@
          this.Controls.Add(this.btnAddParts);
          this.Name = "MainForm";
          this.Text = " Main Form";
-         this.Load += new System.EventHandler(this.MainForm_Load_1);
+         this.Load += new System.EventHandler(this.MainForm_Load);
          ((System.ComponentModel.ISupportInitialize)(this.dgvParts)).EndInit();
          ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
          this.ResumeLayout(false);
