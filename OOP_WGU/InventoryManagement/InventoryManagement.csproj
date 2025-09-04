@@ -52,6 +52,7 @@
     <Compile Include="AddPartForm.Designer.cs">
       <DependentUpon>AddPartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dictionary.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
