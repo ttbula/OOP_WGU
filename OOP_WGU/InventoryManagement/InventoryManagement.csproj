@@ -60,6 +60,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Inhouse.cs" />
+    <Compile Include="Models\Inventory.cs" />
     <Compile Include="Models\Outsourced.cs" />
     <Compile Include="Models\Part.cs" />
     <Compile Include="Models\Product.cs" />

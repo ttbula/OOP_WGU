@@ -28,6 +28,7 @@
       /// </summary>
       private void InitializeComponent()
       {
+         this.components = new System.ComponentModel.Container();
          this.rbInHouse = new System.Windows.Forms.RadioButton();
          this.rbOutsourced = new System.Windows.Forms.RadioButton();
          this.label1 = new System.Windows.Forms.Label();
@@ -49,6 +50,14 @@
          this.label10 = new System.Windows.Forms.Label();
          this.btnCancel = new System.Windows.Forms.Button();
          this.btnSave = new System.Windows.Forms.Button();
+         this.toolTipID = new System.Windows.Forms.ToolTip(this.components);
+         this.toolTipName = new System.Windows.Forms.ToolTip(this.components);
+         this.toolTipInventory = new System.Windows.Forms.ToolTip(this.components);
+         this.toolTipPrice = new System.Windows.Forms.ToolTip(this.components);
+         this.toolTipMin = new System.Windows.Forms.ToolTip(this.components);
+         this.toolTipMax = new System.Windows.Forms.ToolTip(this.components);
+         this.toolTipCompanyName = new System.Windows.Forms.ToolTip(this.components);
+         this.toolTipMachineID = new System.Windows.Forms.ToolTip(this.components);
          this.SuspendLayout();
          // 
          // rbInHouse
@@ -140,59 +149,82 @@
          // 
          // txtboxMin
          // 
+         this.txtboxMin.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxMin.Location = new System.Drawing.Point(386, 290);
          this.txtboxMin.Name = "txtboxMin";
          this.txtboxMin.Size = new System.Drawing.Size(100, 20);
          this.txtboxMin.TabIndex = 9;
+         this.toolTipMin.SetToolTip(this.txtboxMin, "Numbers only");
+         this.txtboxMin.TextChanged += new System.EventHandler(this.txtboxMin_TextChanged);
          // 
          // txtboxID
          // 
+         this.txtboxID.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxID.Location = new System.Drawing.Point(250, 104);
          this.txtboxID.Name = "txtboxID";
          this.txtboxID.Size = new System.Drawing.Size(100, 20);
          this.txtboxID.TabIndex = 10;
+         this.toolTipID.SetToolTip(this.txtboxID, "Numbers only");
+         this.txtboxID.TextChanged += new System.EventHandler(this.txtboxID_TextChanged);
          // 
          // txtboxName
          // 
+         this.txtboxName.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxName.Location = new System.Drawing.Point(250, 151);
          this.txtboxName.Name = "txtboxName";
          this.txtboxName.Size = new System.Drawing.Size(100, 20);
          this.txtboxName.TabIndex = 11;
+         this.toolTipName.SetToolTip(this.txtboxName, "Cannot be blank");
+         this.txtboxName.TextChanged += new System.EventHandler(this.txtboxName_TextChanged);
          // 
          // txtboxInventory
          // 
+         this.txtboxInventory.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxInventory.Location = new System.Drawing.Point(250, 199);
          this.txtboxInventory.Name = "txtboxInventory";
          this.txtboxInventory.Size = new System.Drawing.Size(100, 20);
          this.txtboxInventory.TabIndex = 12;
+         this.toolTipInventory.SetToolTip(this.txtboxInventory, "Numbers only");
+         this.txtboxInventory.TextChanged += new System.EventHandler(this.txtboxInventory_TextChanged);
          // 
          // txtboxPrice
          // 
+         this.txtboxPrice.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxPrice.Location = new System.Drawing.Point(250, 243);
          this.txtboxPrice.Name = "txtboxPrice";
          this.txtboxPrice.Size = new System.Drawing.Size(100, 20);
          this.txtboxPrice.TabIndex = 13;
+         this.toolTipPrice.SetToolTip(this.txtboxPrice, "Numbers only");
+         this.txtboxPrice.TextChanged += new System.EventHandler(this.txtboxPrice_TextChanged);
          // 
          // txtboxMax
          // 
+         this.txtboxMax.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxMax.Location = new System.Drawing.Point(250, 290);
          this.txtboxMax.Name = "txtboxMax";
          this.txtboxMax.Size = new System.Drawing.Size(100, 20);
          this.txtboxMax.TabIndex = 14;
+         this.toolTipMax.SetToolTip(this.txtboxMax, "Numbers only");
+         this.txtboxMax.TextChanged += new System.EventHandler(this.txtboxMax_TextChanged);
          // 
          // txtboxMachineID
          // 
+         this.txtboxMachineID.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxMachineID.Location = new System.Drawing.Point(250, 341);
          this.txtboxMachineID.Name = "txtboxMachineID";
          this.txtboxMachineID.Size = new System.Drawing.Size(100, 20);
          this.txtboxMachineID.TabIndex = 15;
+         this.txtboxMachineID.TextChanged += new System.EventHandler(this.txtboxMachineID_TextChanged);
          // 
          // txtboxCompanyName
          // 
+         this.txtboxCompanyName.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxCompanyName.Location = new System.Drawing.Point(250, 341);
          this.txtboxCompanyName.Name = "txtboxCompanyName";
          this.txtboxCompanyName.Size = new System.Drawing.Size(100, 20);
          this.txtboxCompanyName.TabIndex = 16;
+         this.toolTipCompanyName.SetToolTip(this.txtboxCompanyName, "Cannot be blank");
+         this.txtboxCompanyName.TextChanged += new System.EventHandler(this.txtboxCompanyName_TextChanged);
          // 
          // lblCompanyName
          // 
@@ -215,7 +247,7 @@
          // 
          // btnCancel
          // 
-         this.btnCancel.Location = new System.Drawing.Point(642, 366);
+         this.btnCancel.Location = new System.Drawing.Point(510, 366);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(75, 45);
          this.btnCancel.TabIndex = 21;
@@ -225,7 +257,7 @@
          // 
          // btnSave
          // 
-         this.btnSave.Location = new System.Drawing.Point(549, 366);
+         this.btnSave.Location = new System.Drawing.Point(411, 366);
          this.btnSave.Name = "btnSave";
          this.btnSave.Size = new System.Drawing.Size(75, 45);
          this.btnSave.TabIndex = 22;
@@ -237,7 +269,8 @@
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(800, 450);
+         this.AutoSize = true;
+         this.ClientSize = new System.Drawing.Size(609, 450);
          this.Controls.Add(this.btnSave);
          this.Controls.Add(this.btnCancel);
          this.Controls.Add(this.label10);
@@ -289,5 +322,13 @@
       private System.Windows.Forms.Label label10;
       private System.Windows.Forms.Button btnCancel;
       private System.Windows.Forms.Button btnSave;
+      private System.Windows.Forms.ToolTip toolTipID;
+      private System.Windows.Forms.ToolTip toolTipName;
+      private System.Windows.Forms.ToolTip toolTipInventory;
+      private System.Windows.Forms.ToolTip toolTipMin;
+      private System.Windows.Forms.ToolTip toolTipPrice;
+      private System.Windows.Forms.ToolTip toolTipMax;
+      private System.Windows.Forms.ToolTip toolTipCompanyName;
+      private System.Windows.Forms.ToolTip toolTipMachineID;
    }
 }
