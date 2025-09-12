@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,52 +21,69 @@ namespace InventoryManagement
       public AddPartForm()
       {
          InitializeComponent();
+         this.AcceptButton = btnSave;
+         rbInHouse.Checked = true;
+         UIUpdatePartType();
       }
 
       public Part NewPart { get; private set; }
 
+      public bool IsInHouse => rbInHouse.Checked;
+
+      private class PartInput
+      {
+         public int ID { get; set; }
+         public string Name { get; set; }
+         public int Inventory { get; set; }
+         public decimal Price { get; set; }
+         public int Min { get; set; }
+         public int Max { get; set; }
+
+         public int MachineID { get; set; }
+         public string CompanyName { get; set; }
+      }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       //                                 Class Methods                                                          //
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      ///
 
       /// <summary>
-      /// Gets the correct radio button state, then adds all values to the corresponding class
+      /// Grabs the current state of IsInHouse. Appropriately displays/hides and enables/disables MachineID and Company Name
       /// </summary>
-      private void BuildNewPart()
+      private void UIUpdatePartType()
+      {
+         bool inHouse = rbInHouse.Checked;
+         txtboxMachineID.Visible = lblMachineID.Visible = inHouse;
+         txtboxMachineID.Enabled = inHouse;
+
+         txtboxCompanyName.Visible = lblCompanyName.Visible = !inHouse;
+         txtboxCompanyName.Enabled = lblCompanyName.Enabled = !inHouse;
+      }
+
+      private void rbPartType_CheckedChanged(object sender, EventArgs e) => UIUpdatePartType();
+
+      /// <summary>
+      /// Sets the NewPart with either a Inhouse or Outsource instance
+      /// Gets the correct radio button state, then adds all values to the PartInput class
+      /// <param name="input">A built instance of PartInput</param>/>
+      /// </summary>
+      private void SetPartInput(PartInput input)
       {
          try
          {
-            if (rbInHouse.Checked)
+            if (IsInHouse)
             {
-               NewPart = new Inhouse
-               {
-                  ID = int.Parse(txtboxID.Text),
-                  Name = txtboxName.Text,
-                  Inventory = int.Parse(txtboxInventory.Text),
-                  Price = decimal.Parse(txtboxPrice.Text),
-                  Min = int.Parse(txtboxMin.Text),
-                  Max = int.Parse(txtboxMax.Text),
-                  MachineID = int.Parse(txtboxMachineID.Text)
-               };
+               NewPart = new Inhouse(input.ID, input.Name, input.Inventory, input.Price, input.Min, input.Max, input.MachineID);
             }
             else
             {
-               NewPart = new Outsourced
-               {
-                  ID = int.Parse(txtboxID.Text),
-                  Name = txtboxName.Text,
-                  Inventory = int.Parse(txtboxInventory.Text),
-                  Price = decimal.Parse(txtboxPrice.Text),
-                  Min = int.Parse(txtboxMin.Text),
-                  Max = int.Parse(txtboxMax.Text),
-                  // to access: ((Outsourced)NewPart).CompanyName
-                  CompanyName = txtboxCompanyName.Text
-               };
+               NewPart = new Outsourced(input.ID, input.Name, input.Inventory, input.Price, input.Min, input.Max, input.CompanyName);
             }
          }
+
          catch (Exception)
          {
             MessageBox.Show("An unexpected error occurred", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -73,82 +91,185 @@ namespace InventoryManagement
       }
 
       /// <summary>
-      /// Determines if string has a valid input (not empty). If so box will change to white. If invalid, box will be red
-      /// <returns>True if valid</returns>
-      /// <returns>False if invalid</returns>
-      /// /// <param name="boxName">The name associated with the textbox being validated</param>
+      /// Validates every textbox in add part form
+      /// Sets PartInput properties if all textboxes are determined to be valid
+      /// <param name="input">Returns a built instance of PartInput</param>
+      /// <param string="errorMessage">If a box is invalid, a custom message is returned. Else, an empty string</param>
       /// </summary>
-      private bool IsStringValid(System.Windows.Forms.TextBox boxName)
+      private bool IsFormValid(out PartInput input, out string errorMessage)
       {
-         if (string.IsNullOrEmpty(boxName.Text))
-         {
-            boxName.BackColor = Color.LightCoral;
-            return false;
-         }
-         else
-         {
-            boxName.BackColor = Color.White;
-         }
-         return true;
-      }
+         input = new PartInput();
 
-      /// <summary>
-      /// Determines if number has a valid input (numbers only). If so box will change to white. If invalid, box will be red
-      /// <returns>True if valid</returns>
-      /// <returns>False if invalid</returns>
-      /// <param name="boxName">The name associated with the textbox being validated</param>
-      /// </summary>
-      private bool IsNumValid(System.Windows.Forms.TextBox boxName)
-      {
-         // TryParse method returns true if valid number
-         bool isValid = int.TryParse(boxName.Text, out int id);
-         if (!isValid)
-         {
-            boxName.BackColor = Color.LightCoral;
-            return false;
-         }
-         else
-         {
-            boxName.BackColor = Color.White;
-         }
-         return true;
-      }
+         // Validate the textboxes, sets error message if invalid, sets textbox color to light coral (red), and returns false
 
-      /// <summary>
-      /// Determines if all textboxes have valid values
-      /// <returns>True if valid</returns>
-      /// <returns>False if invalid</returns>
-      /// </summary>
-      private bool IsFormValid()
-      {
-         if (
-            IsStringValid(txtboxName)
-            && IsNumValid(txtboxID)
-            && IsNumValid(txtboxInventory)
-            && IsNumValid(txtboxPrice)
-            && IsNumValid(txtboxMin)
-            && IsNumValid(txtboxMax)
-            )
+         if (!ValidateAndGetInt(txtboxID, out int idValue)) { errorMessage = "ID Invalid"; SetTextboxColor(false, txtboxID); return false; }
+
+         if (string.IsNullOrWhiteSpace(txtboxName.Text)) { errorMessage = "Name Invalid"; SetTextboxColor(false, txtboxName); return false; }
+
+         if (!ValidateAndGetMinMax(txtboxMin, txtboxMax, out int minValue, out int maxValue)) { errorMessage = "Min/Max Invalid"; SetTextboxColor(false, txtboxMin); SetTextboxColor(false, txtboxMax); return false; }
+
+         if (!ValidateAndGetInventory(txtboxInventory, minValue, maxValue, out int invValue)) { errorMessage = "Inventory not within min/max"; SetTextboxColor(false, txtboxInventory); return false; }
+
+         if (!ValidateAndGetPrice(txtboxPrice, out decimal priceValue)) { errorMessage = "Price Invalid"; SetTextboxColor(false, txtboxPrice); return false; }
+
+         // Set properties
+         input.ID = idValue;
+         input.Name = txtboxName.Text;
+         input.Inventory = invValue;
+         input.Price = priceValue;
+         input.Min = minValue;
+         input.Max = maxValue;
+
+         // Get rb state. Validate/set appropriate properties
+         if (IsInHouse)
          {
-            // Get radio button state to determine which box to validate
-            if(rbInHouse.Checked)
+            if (ValidateAndGetMachineID(txtboxMachineID, out int machineIDValue))
             {
-               if(IsNumValid(txtboxMachineID))
-               {
-                  return true;
-               }
+               input.MachineID = machineIDValue;
             }
             else
             {
-               if (IsStringValid(txtboxCompanyName))
-               {
-                  return true;
-               }
+               errorMessage = "Machine ID Invalid";
+               SetTextboxColor(false, txtboxMachineID);
+               return false;
+            }
+         }
+         else if (!string.IsNullOrWhiteSpace(txtboxCompanyName.Text))
+         {
+            input.CompanyName = txtboxCompanyName.Text;
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxCompanyName);
+            errorMessage = "Company Name Invalid";
+            return false;
+         }
+
+         // If no errors, return an empty string
+         errorMessage = "";
+         return true;
+      }
+
+      /// <summary>
+      /// If first argument is true set textbox color to white, false set to light coral
+      /// <param bool="value">Boolean indicating what color to change box to</param>
+      /// <param name="boxName">The name associated with the textbox color assignment</param>
+      /// </summary>
+      private void SetTextboxColor(bool value, System.Windows.Forms.TextBox boxName)
+      {
+         if (value)
+         {
+            boxName.BackColor = Color.White;
+         }
+         else
+         {
+            boxName.BackColor = Color.LightCoral;
+         }
+      }
+
+      /// <summary>
+      /// Validating Min/Max ranges. If conditions are met, we return the min & max values along with a true boolean
+      /// If false, we return the 0'd out values along with a false boolean
+      /// <param Textbox="minBox">The minimum textbox property name</param>
+      /// <param Textbox="maxBox">The maximum textbox property name</param>
+      /// <param int="minValue">If true, a valid min value is returned. If false, a 0</param>
+      /// <param int="maxValue">If true, a valid max value is returned. If false, a 0</param>
+      /// </summary>
+      private bool ValidateAndGetMinMax(System.Windows.Forms.TextBox minBox, System.Windows.Forms.TextBox maxBox, out int minValue, out int maxValue)
+      {
+         minValue = 0;
+         maxValue = 0;
+         // Ensure the input is a valid int
+         if (ValidateAndGetInt(minBox, out int convertedMin) && ValidateAndGetInt(maxBox, out int convertedMax))
+         {
+            // Minimum must be less than or equal to the max
+            if (convertedMin >= convertedMax)
+            {
+               return false;
+            }
+            // Set the out parameters
+            minValue = convertedMin;
+            maxValue = convertedMax;
+            return true;
+         }
+         return false;
+      }
+
+      /// <summary>
+      /// Validating Inventory value. If conditions are met, we return the inventory along with a true boolean
+      /// If false, we return the 0'd out values along with a false boolean
+      /// <param Textbox="box">The inventory textbox property name</param>
+      /// <param int="minValue">The current minimum value</param>
+      /// <param int="maxValue">The current maximum value</param>
+      /// <param int="inv">If true, a valid inventory value is returned. If false, a 0</param>
+      /// </summary>
+      private bool ValidateAndGetInventory(System.Windows.Forms.TextBox box, int min, int max, out int inv)
+      {
+         inv = 0;
+         // Ensure it is a valid int
+         if (ValidateAndGetInt(box, out int validatedInv))
+         {
+            // Inventory must be within min & max
+            if (min <= validatedInv && validatedInv <= max)
+            {
+               inv = validatedInv;
+               return true;
             }
          }
          return false;
       }
 
+      /// <summary>
+      /// Validating Machine ID value. If conditions are met, we return the machine id along with a true boolean
+      /// If false, we return the 0'd out values along with a false boolean
+      /// <param Textbox="box">The machine ID textbox property name</param>
+      /// <param int="machID">If true, a valid machID value is returned. If false, a 0</param>
+      /// </summary>
+      private bool ValidateAndGetMachineID(System.Windows.Forms.TextBox box, out int machID)
+      {
+         machID = 0;
+         if (ValidateAndGetInt(box, out int validMachID))
+         {
+            if(validMachID > 0)
+            {
+               machID = validMachID;
+               return true;
+            }
+         }
+         return false;
+      }
+
+      /// <summary>
+      /// Determines if number has a valid input (numbers only)
+      /// <returns>True if valid</returns>
+      /// <returns>False if invalid</returns>
+      /// <returns>The converted int</returns>
+      /// <param name="boxName">The name associated with the textbox being validated</param>
+      /// <param name="convertedNum">Returns the validated int</param>
+      /// </summary>
+      private bool ValidateAndGetInt(System.Windows.Forms.TextBox boxName, out int convertedNum)
+      {
+         // TryParse method returns true if valid number
+         bool isValid = int.TryParse(boxName.Text, out convertedNum);
+         if (!isValid)
+         {
+            SetTextboxColor(false, boxName);
+            return false;
+         }
+         return true;
+      }
+
+      private bool ValidateAndGetPrice(System.Windows.Forms.TextBox boxName, out decimal convertedDecimal)
+      {
+         // TryParse method returns true if valid number
+         bool isValid = decimal.TryParse(boxName.Text, out convertedDecimal);
+         if (!isValid || convertedDecimal <= 0)
+         {
+            return false;
+         }
+         return true;
+      }
+      
       
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,20 +281,21 @@ namespace InventoryManagement
       /// <summary>
       /// On Save Button click
       /// Verifies forms validity, then if valid, builds NewPart 
-      /// NewPart is then added to Inventory before closing the Add Part form
+      /// NewPart is then added to InStock before closing the Add Part form
       /// If form is not valid it presents user with error message before returning. Add Part form is not closed
       /// </summary>
-      /// <param name="sender"></param>
+      /// <param name="sender"></param>   
       /// <param name="e"></param>
       private void btnSave_Click(object sender, EventArgs e)
       {
-         if (!IsFormValid())
+         // Ensure the form is valid before sending data off
+          if (!IsFormValid(out PartInput input, out string errorMessage))
          {
-            MessageBox.Show("Please review the form before resubmitting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"{errorMessage}. Please review the form before resubmitting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
          }
-         this.BuildNewPart();
-         Inventory.AllParts.Add(NewPart);
+         this.SetPartInput(input);
+
          this.DialogResult = DialogResult.OK;
          this.Close();
       }
@@ -190,51 +312,20 @@ namespace InventoryManagement
       }
 
       /// <summary>
-      /// On Outsourced radio-button click
-      /// Enables and displays Company Name, disables and hides Machine ID
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void rbOutsourced_Click(object sender, EventArgs e)
-      {
-         // Display Company Name Textbox
-         this.txtboxCompanyName.Enabled = true;
-         this.lblCompanyName.Visible = true;
-         this.txtboxCompanyName.Visible = true;
-
-         // Disable and hide Machine ID Textbox
-         this.txtboxMachineID.Enabled = false;
-         this.lblMachineID.Visible = false;
-         this.txtboxMachineID.Visible = false;
-      }
-
-      /// <summary>
-      /// On In House Click radio-button click
-      /// Enables and displays Machine ID, disables and hides Company Name
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param> 
-      private void rbInHouse_Click(object sender, EventArgs e)
-      {
-         // Display Machine ID Textbox
-         this.txtboxMachineID.Enabled = true;
-         this.lblMachineID.Visible = true;
-         this.txtboxMachineID.Visible = true;
-
-         // Disable and hide Company Name Textbox
-         this.txtboxCompanyName.Enabled = false;
-         this.lblCompanyName.Visible = false;
-         this.txtboxCompanyName.Visible = false;
-      }
-
-      /// <summary>
       /// Captures text changes in Name textbox and sends it to be validated
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param> 
       private void txtboxName_TextChanged(object sender, EventArgs e)
       {
-         IsStringValid(txtboxName);
+         if(!string.IsNullOrWhiteSpace(txtboxName.Text))
+         {
+            SetTextboxColor(true, txtboxName);
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxName);
+         }
       }
 
       /// <summary>
@@ -244,17 +335,31 @@ namespace InventoryManagement
       /// <param name="e"></param> 
       private void txtboxID_TextChanged(object sender, EventArgs e)
       {
-         IsNumValid(txtboxID);
+         if (ValidateAndGetInt(txtboxID, out int id))
+         {
+            SetTextboxColor(true, txtboxID);
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxID);
+         }
       }
 
       /// <summary>
-      /// Captures text changes in Inventory textbox and sends it to be validated
+      /// Captures text changes in InStock textbox and sends it to be validated
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param> 
       private void txtboxInventory_TextChanged(object sender, EventArgs e)
       {
-         IsNumValid(txtboxInventory);
+         if (ValidateAndGetInt(txtboxInventory, out int inv))
+         {
+            SetTextboxColor(true, txtboxInventory);
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxInventory);
+         }
       }
 
       /// <summary>
@@ -264,7 +369,14 @@ namespace InventoryManagement
       /// <param name="e"></param> 
       private void txtboxPrice_TextChanged(object sender, EventArgs e)
       {
-         IsNumValid(txtboxPrice);
+         if (ValidateAndGetPrice(txtboxPrice, out decimal price))
+         {
+            SetTextboxColor(true, txtboxPrice);
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxPrice);
+         }
       }
 
       /// <summary>
@@ -274,7 +386,14 @@ namespace InventoryManagement
       /// <param name="e"></param> 
       private void txtboxMax_TextChanged(object sender, EventArgs e)
       {
-         IsNumValid(txtboxMax);
+         if (ValidateAndGetInt(txtboxMax, out int max))
+         {
+            SetTextboxColor(true, txtboxMax);
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxMax);
+         }
       }
 
       /// <summary>
@@ -284,7 +403,14 @@ namespace InventoryManagement
       /// <param name="e"></param> 
       private void txtboxMin_TextChanged(object sender, EventArgs e)
       {
-         IsNumValid(txtboxMin);
+         if (ValidateAndGetInt(txtboxMin, out int min))
+         {
+            SetTextboxColor(true, txtboxMin);
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxMin);
+         }
       }
 
       /// <summary>
@@ -294,7 +420,14 @@ namespace InventoryManagement
       /// <param name="e"></param> 
       private void txtboxCompanyName_TextChanged(object sender, EventArgs e)
       {
-         IsStringValid(txtboxCompanyName);
+         if (!string.IsNullOrWhiteSpace(txtboxCompanyName.Text))
+         {
+            SetTextboxColor(true, txtboxCompanyName);
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxCompanyName);
+         }
       }
 
       /// <summary>
@@ -304,7 +437,14 @@ namespace InventoryManagement
       /// <param name="e"></param> 
       private void txtboxMachineID_TextChanged(object sender, EventArgs e)
       {
-         IsNumValid(txtboxMachineID);
+         if (ValidateAndGetInt(txtboxMachineID, out int mach))
+         {
+            SetTextboxColor(true, txtboxMachineID);
+         }
+         else
+         {
+            SetTextboxColor(false, txtboxMachineID);
+         }
       }
    }
 }

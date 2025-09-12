@@ -37,7 +37,10 @@ namespace InventoryManagement
       private void btnAddParts_Click(object sender, EventArgs e)
       {
          AddPartForm addParts = new AddPartForm();
-         addParts.ShowDialog();
+         if (addParts.ShowDialog() == DialogResult.OK)
+         {
+            Inventory.AllParts.Add(addParts.NewPart);
+         }
       }
 
       /// <summary>

@@ -63,26 +63,28 @@
          // rbInHouse
          // 
          this.rbInHouse.AutoSize = true;
+         this.rbInHouse.BackColor = System.Drawing.SystemColors.ControlDark;
          this.rbInHouse.Location = new System.Drawing.Point(223, 24);
          this.rbInHouse.Name = "rbInHouse";
          this.rbInHouse.Size = new System.Drawing.Size(68, 17);
          this.rbInHouse.TabIndex = 0;
          this.rbInHouse.TabStop = true;
          this.rbInHouse.Text = "In-House";
-         this.rbInHouse.UseVisualStyleBackColor = true;
-         this.rbInHouse.Click += new System.EventHandler(this.rbInHouse_Click);
+         this.rbInHouse.UseVisualStyleBackColor = false;
+         this.rbInHouse.Click += new System.EventHandler(this.rbPartType_CheckedChanged);
          // 
          // rbOutsourced
          // 
          this.rbOutsourced.AutoSize = true;
+         this.rbOutsourced.BackColor = System.Drawing.SystemColors.ControlDark;
          this.rbOutsourced.Location = new System.Drawing.Point(390, 24);
          this.rbOutsourced.Name = "rbOutsourced";
          this.rbOutsourced.Size = new System.Drawing.Size(80, 17);
          this.rbOutsourced.TabIndex = 1;
          this.rbOutsourced.TabStop = true;
          this.rbOutsourced.Text = "Outsourced";
-         this.rbOutsourced.UseVisualStyleBackColor = true;
-         this.rbOutsourced.Click += new System.EventHandler(this.rbOutsourced_Click);
+         this.rbOutsourced.UseVisualStyleBackColor = false;
+         this.rbOutsourced.Click += new System.EventHandler(this.rbPartType_CheckedChanged);
          // 
          // label1
          // 
@@ -247,22 +249,24 @@
          // 
          // btnCancel
          // 
+         this.btnCancel.BackColor = System.Drawing.SystemColors.ControlDark;
          this.btnCancel.Location = new System.Drawing.Point(510, 366);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(75, 45);
          this.btnCancel.TabIndex = 21;
          this.btnCancel.Text = "Cancel";
-         this.btnCancel.UseVisualStyleBackColor = true;
+         this.btnCancel.UseVisualStyleBackColor = false;
          this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
          // btnSave
          // 
+         this.btnSave.BackColor = System.Drawing.SystemColors.ControlDark;
          this.btnSave.Location = new System.Drawing.Point(411, 366);
          this.btnSave.Name = "btnSave";
          this.btnSave.Size = new System.Drawing.Size(75, 45);
          this.btnSave.TabIndex = 22;
          this.btnSave.Text = "Save";
-         this.btnSave.UseVisualStyleBackColor = true;
+         this.btnSave.UseVisualStyleBackColor = false;
          this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
          // 
          // AddPartForm
@@ -270,6 +274,7 @@
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.AutoSize = true;
+         this.BackColor = System.Drawing.SystemColors.ActiveCaption;
          this.ClientSize = new System.Drawing.Size(609, 450);
          this.Controls.Add(this.btnSave);
          this.Controls.Add(this.btnCancel);
