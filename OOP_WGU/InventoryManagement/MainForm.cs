@@ -36,10 +36,11 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnAddParts_Click(object sender, EventArgs e)
       {
+         //addParts.NewPart
          AddPartForm addParts = new AddPartForm();
          if (addParts.ShowDialog() == DialogResult.OK)
          {
-            Inventory.AllParts.Add(addParts.NewPart);
+            Inventory.addPart(addParts.NewPart);
          }
       }
 
@@ -50,7 +51,19 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnModifyParts_Click(object sender, EventArgs e)
       {
-         
+         if (dgvParts.CurrentRow != null && dgvParts.CurrentRow.DataBoundItem is Part selectedPart)
+         {
+            ModifyPartForm modifyParts = new ModifyPartForm(selectedPart);
+            if (modifyParts.ShowDialog() == DialogResult.OK)
+            {
+               var updated = modifyParts.ModifiedPart;
+               Inventory.updatePart(updated.ID, updated);
+            }
+         }
+         else
+         {
+            MessageBox.Show("Please select a part to modify.");
+         }
       }
 
       /// <summary>

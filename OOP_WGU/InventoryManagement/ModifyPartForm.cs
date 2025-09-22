@@ -4,33 +4,44 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace InventoryManagement
 {
-   public partial class AddPartForm : Form
+   public partial class ModifyPartForm : Form
    {
-      public AddPartForm()
+      public ModifyPartForm(Part original)
       {
          InitializeComponent();
          this.AcceptButton = btnSave;
          rbInHouse.Checked = true;
          UIUpdatePartType();
+
+         txtboxID.Text = original.ID.ToString();
+         txtboxName.Text = original.Name;
+         txtboxInventory.Text = original.InStock.ToString();
+         txtboxPrice.Text = original.Price.ToString();
+         txtboxMax.Text = original.Max.ToString();
+         txtboxMin.Text = original.Min.ToString();
+
+         if (original is Inhouse inhousePart)
+         {
+            txtboxMachineID.Text = inhousePart.MachineID.ToString();
+         }
+         else if (original is Outsourced outsourcedPart)
+         {
+            txtboxCompanyName.Text = outsourcedPart.CompanyName;
+         }
       }
 
-      public Part NewPart { get; private set; }
+      public Part ModifiedPart { get; private set; }
 
       public bool IsInHouse => rbInHouse.Checked;
 
-      private class PartInput
+      private class ModifiedPartInput
       {
          public int ID { get; set; }
          public string Name { get; set; }
@@ -43,7 +54,6 @@ namespace InventoryManagement
          public string CompanyName { get; set; }
       }
 
-      
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       //                                 Class Methods                                                          //
@@ -75,17 +85,17 @@ namespace InventoryManagement
       /// Gets the correct radio button state, then adds all values to the PartInput class
       /// <param name="input">A built instance of PartInput</param>/>
       /// </summary>
-      private void SetPartInput(PartInput input)
+      private void SetPartInput(ModifiedPartInput input)
       {
          try
          {
             if (IsInHouse)
             {
-               NewPart = new Inhouse(input.ID, input.Name, input.Inventory, input.Price, input.Min, input.Max, input.MachineID);
+               ModifiedPart = new Inhouse(input.ID, input.Name, input.Inventory, input.Price, input.Min, input.Max, input.MachineID);
             }
             else
             {
-               NewPart = new Outsourced(input.ID, input.Name, input.Inventory, input.Price, input.Min, input.Max, input.CompanyName);
+               ModifiedPart = new Outsourced(input.ID, input.Name, input.Inventory, input.Price, input.Min, input.Max, input.CompanyName);
             }
          }
 
@@ -101,16 +111,16 @@ namespace InventoryManagement
       //                                 Validation Methods                                                     //
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+      ///
       /// <summary>
       /// Validates every textbox in add part form
       /// Sets PartInput properties if all textboxes are determined to be valid
       /// <param name="input">Returns a built instance of PartInput</param>
       /// <param string="errorMessage">If a box is invalid, a custom message is returned. Else, an empty string</param>
       /// </summary>
-      private bool IsFormValid(out PartInput input, out string errorMessage)
+      private bool IsFormValid(out ModifiedPartInput input, out string errorMessage)
       {
-         input = new PartInput();
+         input = new ModifiedPartInput();
 
          // Validate the textboxes, sets error message if invalid, sets textbox color to light coral (red), and returns false
 
@@ -225,7 +235,7 @@ namespace InventoryManagement
          machID = 0;
          if (ValidateAndGetInt(box, out int validMachID))
          {
-            if(validMachID > 0)
+            if (validMachID > 0)
             {
                machID = validMachID;
                return true;
@@ -273,8 +283,6 @@ namespace InventoryManagement
          return true;
       }
 
-
-
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       //                                 Controller Events                                                      //
@@ -309,7 +317,7 @@ namespace InventoryManagement
       private void btnSave_Click(object sender, EventArgs e)
       {
          // Ensure the form is valid before sending data off
-          if (!IsFormValid(out PartInput input, out string errorMessage))
+         if (!IsFormValid(out ModifiedPartInput input, out string errorMessage))
          {
             MessageBox.Show($"{errorMessage}. Please review the form before resubmitting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
@@ -338,7 +346,7 @@ namespace InventoryManagement
       /// <param name="e"></param> 
       private void txtboxName_TextChanged(object sender, EventArgs e)
       {
-         if(!string.IsNullOrWhiteSpace(txtboxName.Text))
+         if (!string.IsNullOrWhiteSpace(txtboxName.Text))
          {
             SetTextboxColor(true, txtboxName);
          }
