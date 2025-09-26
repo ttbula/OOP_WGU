@@ -4,101 +4,58 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace InventoryManagement
 {
-   public partial class AddPartForm : Form
+   public partial class AddProductForm : Form
    {
-      private int _newPartID;
-      public AddPartForm()
+      private int _newProductID;
+      public AddProductForm()
       {
          InitializeComponent();
-         _newPartID = Inventory.GetNextPartID(); 
-         txtboxID.Text = _newPartID.ToString();
+         dgvCandidateParts.DataSource = Inventory.AllParts;
+         dgvCandidateParts.ReadOnly = true;
+         dgvCandidateParts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+         dgvCandidateParts.MultiSelect = false;
+
+         dgvAssociatedParts.DataSource = _associated;
+         dgvAssociatedParts.ReadOnly = true;
+         dgvAssociatedParts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+         dgvAssociatedParts.MultiSelect = false;
+
+         _newProductID = Inventory.GetNextProductID();
+         txtboxID.Text = _newProductID.ToString();
          this.AcceptButton = btnSave;
-         rbInHouse.Checked = true;
-         UIUpdatePartType();
       }
+      public Product NewProduct { get; private set; }
+      private BindingList<Part> _associated = new BindingList<Part>();
 
-      public Part NewPart { get; private set; }
-
-      public bool IsInHouse => rbInHouse.Checked;
-
-      private class PartInput
+      private class ProductInput
       {
-         public int ID { get; set; }
+         public int ProductID { get; set; }
          public string Name { get; set; }
-         public int Inventory { get; set; }
          public decimal Price { get; set; }
+         public int InStock { get; set; }
          public int Min { get; set; }
          public int Max { get; set; }
-
-         public int MachineID { get; set; }
-         public string CompanyName { get; set; }
       }
 
-      
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //                                 Class Methods                                                          //
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /// <summary>
-      /// Called when UI must be updated. Grabs the current state of IsInHouse
-      /// On Inhouse (default), MachineID label and textbox is displayed and enabled. Company Name label and textbox is disabled and hidden
-      /// On Outsourced, Company Name label and textbox is displayed and enabled. Machine ID label and textbox is disabled and hidden
-      /// </summary>
-      private void UIUpdatePartType()
+      private void SetProductInput(ProductInput input)
       {
-         bool inHouse = rbInHouse.Checked;
-         txtboxMachineID.Visible = lblMachineID.Visible = inHouse;
-         txtboxMachineID.Enabled = inHouse;
-
-         txtboxCompanyName.Visible = lblCompanyName.Visible = !inHouse;
-         txtboxCompanyName.Enabled = lblCompanyName.Enabled = !inHouse;
-      }
-
-      /// <summary>
-      /// Handles Inhouse/Outsourced button changes by updating the UI
-      /// </summary>
-      private void rbPartType_CheckedChanged(object sender, EventArgs e) => UIUpdatePartType();
-
-      /// <summary>
-      /// Sets the NewPart with either a Inhouse or Outsource instance
-      /// Gets the correct radio button state, then adds all values to the PartInput class
-      /// <param name="input">A built instance of PartInput</param>/>
-      /// </summary>
-      private void SetPartInput(PartInput input)
-      {
-         try
+         NewProduct = new Product
          {
-            if (IsInHouse)
-            {
-               NewPart = new Inhouse(input.ID, input.Name, input.Inventory, input.Price, input.Min, input.Max, input.MachineID);
-            }
-            else
-            {
-               NewPart = new Outsourced(input.ID, input.Name, input.Inventory, input.Price, input.Min, input.Max, input.CompanyName);
-            }
-         }
-
-         catch (Exception)
-         {
-            MessageBox.Show("An unexpected error occurred", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-         }
+            ProductID = input.ProductID,
+            Name = input.Name,
+            InStock = input.InStock,
+            Price = input.Price,
+            Min = input.Min,
+            Max = input.Max
+         };
       }
-
-
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////
       //                                 Validation Methods                                                     //
@@ -111,9 +68,9 @@ namespace InventoryManagement
       /// <param name="input">Returns a built instance of PartInput</param>
       /// <param string="errorMessage">If a box is invalid, a custom message is returned. Else, an empty string</param>
       /// </summary>
-      private bool IsFormValid(out PartInput input, out string errorMessage)
+      private bool IsFormValid(out ProductInput input, out string errorMessage)
       {
-         input = new PartInput();
+         input = new ProductInput();
 
          // Validate the textboxes, sets error message if invalid, sets textbox color to light coral (red), and returns false
 
@@ -126,37 +83,13 @@ namespace InventoryManagement
          if (!ValidateAndGetPrice(txtboxPrice, out decimal priceValue)) { errorMessage = "Price Invalid"; SetTextboxColor(false, txtboxPrice); return false; }
 
          // Set properties
-         input.ID = _newPartID;
+         input.ProductID = _newProductID;
          input.Name = txtboxName.Text;
-         input.Inventory = invValue;
+         input.InStock = invValue;
          input.Price = priceValue;
          input.Min = minValue;
          input.Max = maxValue;
 
-         // Get rb state. Validate/set appropriate properties
-         if (IsInHouse)
-         {
-            if (ValidateAndGetMachineID(txtboxMachineID, out int machineIDValue))
-            {
-               input.MachineID = machineIDValue;
-            }
-            else
-            {
-               errorMessage = "Machine ID Invalid";
-               SetTextboxColor(false, txtboxMachineID);
-               return false;
-            }
-         }
-         else if (!string.IsNullOrWhiteSpace(txtboxCompanyName.Text))
-         {
-            input.CompanyName = txtboxCompanyName.Text;
-         }
-         else
-         {
-            SetTextboxColor(false, txtboxCompanyName);
-            errorMessage = "Company Name Invalid";
-            return false;
-         }
 
          // If no errors, return an empty string
          errorMessage = "";
@@ -209,26 +142,6 @@ namespace InventoryManagement
             if (min <= validatedInv && validatedInv <= max)
             {
                inv = validatedInv;
-               return true;
-            }
-         }
-         return false;
-      }
-
-      /// <summary>
-      /// Validating Machine ID value. If conditions are met, we return the machine id along with a true boolean
-      /// If false, we return the 0'd out values along with a false boolean
-      /// <param Textbox="box">The machine ID textbox property name</param>
-      /// <param int="machID">If true, a valid machID value is returned. If false, a 0</param>
-      /// </summary>
-      private bool ValidateAndGetMachineID(System.Windows.Forms.TextBox box, out int machID)
-      {
-         machID = 0;
-         if (ValidateAndGetInt(box, out int validMachID))
-         {
-            if(validMachID > 0)
-            {
-               machID = validMachID;
                return true;
             }
          }
@@ -310,12 +223,12 @@ namespace InventoryManagement
       private void btnSave_Click(object sender, EventArgs e)
       {
          // Ensure the form is valid before sending data off
-          if (!IsFormValid(out PartInput input, out string errorMessage))
+         if (!IsFormValid(out ProductInput input, out string errorMessage))
          {
             MessageBox.Show($"{errorMessage}. Please review the form before resubmitting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
          }
-         this.SetPartInput(input);
+         this.SetProductInput(input);
 
          this.DialogResult = DialogResult.OK;
          this.Close();
@@ -339,7 +252,7 @@ namespace InventoryManagement
       /// <param name="e"></param> 
       private void txtboxName_TextChanged(object sender, EventArgs e)
       {
-         if(!string.IsNullOrWhiteSpace(txtboxName.Text))
+         if (!string.IsNullOrWhiteSpace(txtboxName.Text))
          {
             SetTextboxColor(true, txtboxName);
          }
@@ -417,38 +330,30 @@ namespace InventoryManagement
          }
       }
 
-      /// <summary>
-      /// Captures text changes in Company Name textbox and sends it to be validated
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param> 
-      private void txtboxCompanyName_TextChanged(object sender, EventArgs e)
+      private void btnDelete_Click(object sender, EventArgs e)
       {
-         if (!string.IsNullOrWhiteSpace(txtboxCompanyName.Text))
+         if(dgvAssociatedParts.CurrentRow?.DataBoundItem is Part selectedPart)
          {
-            SetTextboxColor(true, txtboxCompanyName);
-         }
-         else
-         {
-            SetTextboxColor(false, txtboxCompanyName);
+            _associated.Remove(selectedPart);
          }
       }
 
-      /// <summary>
-      /// Captures text changes in Machine ID textbox and sends it to be validated
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param> 
-      private void txtboxMachineID_TextChanged(object sender, EventArgs e)
+      private void btnAdd_Click(object sender, EventArgs e)
       {
-         if (ValidateAndGetInt(txtboxMachineID, out int mach))
+         var selectedPart = dgvCandidateParts.CurrentRow?.DataBoundItem as Part;
+         if (selectedPart == null)
          {
-            SetTextboxColor(true, txtboxMachineID);
+            MessageBox.Show("Part from top grid must be selected", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
          }
-         else
+
+         if (_associated.Any(p => p.ID == selectedPart.ID))
          {
-            SetTextboxColor(false, txtboxMachineID);
+            MessageBox.Show("Part is already selected", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
          }
+
+         _associated.Add(selectedPart);
       }
    }
 }

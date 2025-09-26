@@ -52,6 +52,12 @@
     <Compile Include="AddPartForm.Designer.cs">
       <DependentUpon>AddPartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddProductForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddProductForm.Designer.cs">
+      <DependentUpon>AddProductForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dictionary.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -70,16 +76,28 @@
     <Compile Include="ModifyPartForm.Designer.cs">
       <DependentUpon>ModifyPartForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModifyProductForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModifyProductForm.Designer.cs">
+      <DependentUpon>ModifyProductForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AddPartForm.resx">
       <DependentUpon>AddPartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddProductForm.resx">
+      <DependentUpon>AddProductForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModifyPartForm.resx">
       <DependentUpon>ModifyPartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModifyProductForm.resx">
+      <DependentUpon>ModifyProductForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

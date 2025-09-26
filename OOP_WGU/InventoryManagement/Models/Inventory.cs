@@ -12,12 +12,29 @@ namespace InventoryManagement.Models
       public static BindingList<Part> AllParts { get; } = new BindingList<Part>();
       public static BindingList<Product> Products { get; } = new BindingList<Product>();
 
-      public static void addProduct(Product product)
+      public static void AddProduct(Product product)
       {
          Products.Add(product);
       }
 
-      public static bool removeProduct(int id)
+      private static int _nextPartID = 1;
+      private static int _nextProductID = 1;
+
+      public static int GetNextPartID()
+      {
+         int returnedID = _nextPartID;
+         _nextPartID++;
+         return returnedID;
+      }
+
+      public static int GetNextProductID()
+      {
+         int returnedID = _nextProductID;
+         _nextProductID++;
+         return returnedID;
+      }
+
+      public static bool RemoveProduct(int id)
       {
          var productToRemove = Products.FirstOrDefault(p => p.ProductID == id);
          if (productToRemove != null)
@@ -28,12 +45,12 @@ namespace InventoryManagement.Models
          return false;
       }
 
-      public static void addPart(Part part)
+      public static void AddPart(Part part)
       {
          AllParts.Add(part);
       }
 
-      public static void updatePart(int id, Part updated)
+      public static void UpdatePart(int id, Part updated)
       {
          int index = AllParts.ToList().FindIndex(p => p.ID == id);
 
@@ -43,7 +60,18 @@ namespace InventoryManagement.Models
          }
       }
 
-      public static bool removePart(int id)
+      public static void UpdateProduct(int id, Product updated)
+      {
+         int index = Products.ToList().FindIndex(p => p.ProductID == id);
+
+         if (index >= 0)
+         {
+            Products[index] = updated;
+         }
+      }
+
+      // eventually want this to have out string reason
+      public static bool RemovePart(int id)
       {
          var partToRemove = AllParts.FirstOrDefault(p => p.ID == id);
          if (partToRemove != null)

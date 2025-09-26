@@ -162,12 +162,13 @@
          // txtboxID
          // 
          this.txtboxID.BackColor = System.Drawing.Color.LightCoral;
+         this.txtboxID.Enabled = false;
          this.txtboxID.Location = new System.Drawing.Point(250, 104);
          this.txtboxID.Name = "txtboxID";
+         this.txtboxID.ReadOnly = true;
          this.txtboxID.Size = new System.Drawing.Size(100, 20);
          this.txtboxID.TabIndex = 10;
          this.toolTipID.SetToolTip(this.txtboxID, "Numbers only");
-         this.txtboxID.TextChanged += new System.EventHandler(this.txtboxID_TextChanged);
          // 
          // txtboxName
          // 
@@ -298,7 +299,7 @@
          this.Controls.Add(this.rbOutsourced);
          this.Controls.Add(this.rbInHouse);
          this.Name = "AddPartForm";
-         this.Text = "AddPartForm";
+         this.Text = "Part";
          this.ResumeLayout(false);
          this.PerformLayout();
 

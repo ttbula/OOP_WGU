@@ -141,6 +141,7 @@
          this.txtboxID.BackColor = System.Drawing.Color.LightCoral;
          this.txtboxID.Location = new System.Drawing.Point(347, 112);
          this.txtboxID.Name = "txtboxID";
+         this.txtboxID.ReadOnly = true;
          this.txtboxID.Size = new System.Drawing.Size(100, 20);
          this.txtboxID.TabIndex = 32;
          this.txtboxID.TextChanged += new System.EventHandler(this.txtboxID_TextChanged);
@@ -278,7 +279,7 @@
          this.Controls.Add(this.rbOutsourced);
          this.Controls.Add(this.rbInHouse);
          this.Name = "ModifyPartForm";
-         this.Text = "Modify Part";
+         this.Text = "Part";
          this.ResumeLayout(false);
          this.PerformLayout();
 

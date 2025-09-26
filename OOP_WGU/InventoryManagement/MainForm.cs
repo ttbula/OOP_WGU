@@ -21,7 +21,7 @@ namespace InventoryManagement
       private void LoadData()
       {
          dgvParts.DataSource = Inventory.AllParts ;
-         //dgvProducts.DataSource = products;
+         dgvProducts.DataSource = Inventory.Products;
       }
 
       private void MainForm_Load(object sender, EventArgs e)
@@ -40,7 +40,7 @@ namespace InventoryManagement
          AddPartForm addParts = new AddPartForm();
          if (addParts.ShowDialog() == DialogResult.OK)
          {
-            Inventory.addPart(addParts.NewPart);
+            Inventory.AddPart(addParts.NewPart);
          }
       }
 
@@ -57,7 +57,7 @@ namespace InventoryManagement
             if (modifyParts.ShowDialog() == DialogResult.OK)
             {
                var updated = modifyParts.ModifiedPart;
-               Inventory.updatePart(updated.ID, updated);
+               Inventory.UpdatePart(updated.ID, updated);
             }
          }
          else
@@ -73,7 +73,23 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnDeleteParts_Click(object sender, EventArgs e)
       {
-         MessageBox.Show("Delete Parts");
+         var part = dgvParts.CurrentRow?.DataBoundItem as Part;
+         if (part == null)
+         {
+            MessageBox.Show("Please select a part to delete.");
+            return;
+         }
+
+         var result = MessageBox.Show("Are you sure you want to delete the part?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+         if (result == DialogResult.Yes)
+         {
+            // eventually this will need to have out string reason
+            if (!Inventory.RemovePart(part.ID))
+            {
+               MessageBox.Show("");
+            }
+         }
+         
       }
 
       /// <summary>
@@ -93,7 +109,11 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnAddProducts_Click(object sender, EventArgs e)
       {
-         MessageBox.Show("Add Products");
+         AddProductForm addProduct = new AddProductForm();
+         if (addProduct.ShowDialog() == DialogResult.OK)
+         {
+            //Inventory.UpdateProduct();
+         }
       }
 
       /// <summary>
@@ -103,7 +123,15 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnModifyProducts_Click(object sender, EventArgs e)
       {
-         MessageBox.Show("Modify Products");
+         if (dgvParts.CurrentRow != null && dgvParts.CurrentRow.DataBoundItem is Part selectedPart)
+         {
+            ModifyProductForm modifyProduct = new ModifyProductForm();
+            if (modifyProduct.ShowDialog() == DialogResult.OK)
+            {
+               //var updated = modifyProduct.ModifiedPart;
+               //Inventory.UpdateProduct(updated.ID, updated);
+            }
+         }
       }
 
       /// <summary>
