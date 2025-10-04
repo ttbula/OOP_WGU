@@ -17,6 +17,7 @@ namespace InventoryManagement
       {
          InitializeComponent();
          this.AcceptButton = btnSave;
+         txtboxID.ReadOnly = true;
          rbInHouse.Checked = true;
          UIUpdatePartType();
 

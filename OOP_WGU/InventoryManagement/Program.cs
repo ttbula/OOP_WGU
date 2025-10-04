@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InventoryManagement.Models;
 using System.Windows.Forms;
 
 namespace InventoryManagement
@@ -16,6 +17,7 @@ namespace InventoryManagement
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
+         Inventory.SeedData();
          Application.Run(new MainForm());
       }
    }

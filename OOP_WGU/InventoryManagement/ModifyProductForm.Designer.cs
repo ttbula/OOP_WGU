@@ -30,14 +30,14 @@
       {
          this.txtboxMax = new System.Windows.Forms.TextBox();
          this.label4 = new System.Windows.Forms.Label();
-         this.button1 = new System.Windows.Forms.Button();
-         this.button2 = new System.Windows.Forms.Button();
-         this.button3 = new System.Windows.Forms.Button();
-         this.button4 = new System.Windows.Forms.Button();
-         this.dataGridView1 = new System.Windows.Forms.DataGridView();
-         this.dataGridView3 = new System.Windows.Forms.DataGridView();
-         this.textBox1 = new System.Windows.Forms.TextBox();
-         this.button5 = new System.Windows.Forms.Button();
+         this.btnDelete = new System.Windows.Forms.Button();
+         this.btnSave = new System.Windows.Forms.Button();
+         this.btnCancel = new System.Windows.Forms.Button();
+         this.btnAdd = new System.Windows.Forms.Button();
+         this.dgvCandidateParts = new System.Windows.Forms.DataGridView();
+         this.dgvAssociatedParts = new System.Windows.Forms.DataGridView();
+         this.txtboxSearch = new System.Windows.Forms.TextBox();
+         this.btnSearch = new System.Windows.Forms.Button();
          this.label5 = new System.Windows.Forms.Label();
          this.label6 = new System.Windows.Forms.Label();
          this.label7 = new System.Windows.Forms.Label();
@@ -46,13 +46,13 @@
          this.label16 = new System.Windows.Forms.Label();
          this.label17 = new System.Windows.Forms.Label();
          this.label18 = new System.Windows.Forms.Label();
-         this.textBox2 = new System.Windows.Forms.TextBox();
-         this.textBox3 = new System.Windows.Forms.TextBox();
-         this.textBox4 = new System.Windows.Forms.TextBox();
-         this.textBox5 = new System.Windows.Forms.TextBox();
-         this.textBox6 = new System.Windows.Forms.TextBox();
-         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-         ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+         this.txtboxMin = new System.Windows.Forms.TextBox();
+         this.txtboxID = new System.Windows.Forms.TextBox();
+         this.txtboxName = new System.Windows.Forms.TextBox();
+         this.txtboxInventory = new System.Windows.Forms.TextBox();
+         this.txtboxPrice = new System.Windows.Forms.TextBox();
+         ((System.ComponentModel.ISupportInitialize)(this.dgvCandidateParts)).BeginInit();
+         ((System.ComponentModel.ISupportInitialize)(this.dgvAssociatedParts)).BeginInit();
          this.SuspendLayout();
          // 
          // txtboxMax
@@ -62,6 +62,7 @@
          this.txtboxMax.Name = "txtboxMax";
          this.txtboxMax.Size = new System.Drawing.Size(82, 20);
          this.txtboxMax.TabIndex = 49;
+         this.txtboxMax.TextChanged += new System.EventHandler(this.txtboxMax_TextChanged);
          // 
          // label4
          // 
@@ -73,74 +74,79 @@
          this.label4.TabIndex = 27;
          this.label4.Text = "Modify Product";
          // 
-         // button1
+         // btnDelete
          // 
-         this.button1.Location = new System.Drawing.Point(804, 420);
-         this.button1.Name = "button1";
-         this.button1.Size = new System.Drawing.Size(59, 39);
-         this.button1.TabIndex = 28;
-         this.button1.Text = "Delete";
-         this.button1.UseVisualStyleBackColor = true;
+         this.btnDelete.Location = new System.Drawing.Point(804, 420);
+         this.btnDelete.Name = "btnDelete";
+         this.btnDelete.Size = new System.Drawing.Size(59, 39);
+         this.btnDelete.TabIndex = 28;
+         this.btnDelete.Text = "Delete";
+         this.btnDelete.UseVisualStyleBackColor = true;
+         this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
          // 
-         // button2
+         // btnSave
          // 
-         this.button2.Location = new System.Drawing.Point(708, 465);
-         this.button2.Name = "button2";
-         this.button2.Size = new System.Drawing.Size(59, 39);
-         this.button2.TabIndex = 29;
-         this.button2.Text = "Save";
-         this.button2.UseVisualStyleBackColor = true;
+         this.btnSave.Location = new System.Drawing.Point(708, 465);
+         this.btnSave.Name = "btnSave";
+         this.btnSave.Size = new System.Drawing.Size(59, 39);
+         this.btnSave.TabIndex = 29;
+         this.btnSave.Text = "Save";
+         this.btnSave.UseVisualStyleBackColor = true;
+         this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
          // 
-         // button3
+         // btnCancel
          // 
-         this.button3.Location = new System.Drawing.Point(804, 465);
-         this.button3.Name = "button3";
-         this.button3.Size = new System.Drawing.Size(59, 39);
-         this.button3.TabIndex = 30;
-         this.button3.Text = "Cancel";
-         this.button3.UseVisualStyleBackColor = true;
+         this.btnCancel.Location = new System.Drawing.Point(804, 465);
+         this.btnCancel.Name = "btnCancel";
+         this.btnCancel.Size = new System.Drawing.Size(59, 39);
+         this.btnCancel.TabIndex = 30;
+         this.btnCancel.Text = "Cancel";
+         this.btnCancel.UseVisualStyleBackColor = true;
+         this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
          // 
-         // button4
+         // btnAdd
          // 
-         this.button4.Location = new System.Drawing.Point(804, 234);
-         this.button4.Name = "button4";
-         this.button4.Size = new System.Drawing.Size(59, 39);
-         this.button4.TabIndex = 31;
-         this.button4.Text = "Add";
-         this.button4.UseVisualStyleBackColor = true;
+         this.btnAdd.Location = new System.Drawing.Point(804, 234);
+         this.btnAdd.Name = "btnAdd";
+         this.btnAdd.Size = new System.Drawing.Size(59, 39);
+         this.btnAdd.TabIndex = 31;
+         this.btnAdd.Text = "Add";
+         this.btnAdd.UseVisualStyleBackColor = true;
+         this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
          // 
-         // dataGridView1
+         // dgvCandidateParts
          // 
-         this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         this.dataGridView1.Location = new System.Drawing.Point(490, 111);
-         this.dataGridView1.Name = "dataGridView1";
-         this.dataGridView1.Size = new System.Drawing.Size(420, 97);
-         this.dataGridView1.TabIndex = 32;
+         this.dgvCandidateParts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         this.dgvCandidateParts.Location = new System.Drawing.Point(490, 111);
+         this.dgvCandidateParts.Name = "dgvCandidateParts";
+         this.dgvCandidateParts.Size = new System.Drawing.Size(420, 97);
+         this.dgvCandidateParts.TabIndex = 32;
          // 
-         // dataGridView3
+         // dgvAssociatedParts
          // 
-         this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         this.dataGridView3.Location = new System.Drawing.Point(490, 301);
-         this.dataGridView3.Name = "dataGridView3";
-         this.dataGridView3.Size = new System.Drawing.Size(420, 97);
-         this.dataGridView3.TabIndex = 33;
+         this.dgvAssociatedParts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         this.dgvAssociatedParts.Location = new System.Drawing.Point(490, 301);
+         this.dgvAssociatedParts.Name = "dgvAssociatedParts";
+         this.dgvAssociatedParts.Size = new System.Drawing.Size(420, 97);
+         this.dgvAssociatedParts.TabIndex = 33;
          // 
-         // textBox1
+         // txtboxSearch
          // 
-         this.textBox1.Location = new System.Drawing.Point(708, 59);
-         this.textBox1.Multiline = true;
-         this.textBox1.Name = "textBox1";
-         this.textBox1.Size = new System.Drawing.Size(202, 27);
-         this.textBox1.TabIndex = 34;
+         this.txtboxSearch.Location = new System.Drawing.Point(708, 59);
+         this.txtboxSearch.Multiline = true;
+         this.txtboxSearch.Name = "txtboxSearch";
+         this.txtboxSearch.Size = new System.Drawing.Size(202, 27);
+         this.txtboxSearch.TabIndex = 34;
          // 
-         // button5
+         // btnSearch
          // 
-         this.button5.Location = new System.Drawing.Point(623, 59);
-         this.button5.Name = "button5";
-         this.button5.Size = new System.Drawing.Size(62, 29);
-         this.button5.TabIndex = 35;
-         this.button5.Text = "Search";
-         this.button5.UseVisualStyleBackColor = true;
+         this.btnSearch.Location = new System.Drawing.Point(623, 59);
+         this.btnSearch.Name = "btnSearch";
+         this.btnSearch.Size = new System.Drawing.Size(62, 29);
+         this.btnSearch.TabIndex = 35;
+         this.btnSearch.Text = "Search";
+         this.btnSearch.UseVisualStyleBackColor = true;
+         this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
          // 
          // label5
          // 
@@ -214,47 +220,51 @@
          this.label18.TabIndex = 43;
          this.label18.Text = "Max";
          // 
-         // textBox2
+         // txtboxMin
          // 
-         this.textBox2.BackColor = System.Drawing.Color.LightCoral;
-         this.textBox2.Location = new System.Drawing.Point(285, 363);
-         this.textBox2.Name = "textBox2";
-         this.textBox2.Size = new System.Drawing.Size(82, 20);
-         this.textBox2.TabIndex = 44;
+         this.txtboxMin.BackColor = System.Drawing.Color.LightCoral;
+         this.txtboxMin.Location = new System.Drawing.Point(285, 363);
+         this.txtboxMin.Name = "txtboxMin";
+         this.txtboxMin.Size = new System.Drawing.Size(82, 20);
+         this.txtboxMin.TabIndex = 44;
+         this.txtboxMin.TextChanged += new System.EventHandler(this.txtboxMin_TextChanged);
          // 
-         // textBox3
+         // txtboxID
          // 
-         this.textBox3.BackColor = System.Drawing.Color.LightGray;
-         this.textBox3.Enabled = false;
-         this.textBox3.Location = new System.Drawing.Point(157, 188);
-         this.textBox3.Name = "textBox3";
-         this.textBox3.ReadOnly = true;
-         this.textBox3.Size = new System.Drawing.Size(148, 20);
-         this.textBox3.TabIndex = 45;
+         this.txtboxID.BackColor = System.Drawing.Color.LightGray;
+         this.txtboxID.Enabled = false;
+         this.txtboxID.Location = new System.Drawing.Point(157, 188);
+         this.txtboxID.Name = "txtboxID";
+         this.txtboxID.ReadOnly = true;
+         this.txtboxID.Size = new System.Drawing.Size(148, 20);
+         this.txtboxID.TabIndex = 45;
          // 
-         // textBox4
+         // txtboxName
          // 
-         this.textBox4.BackColor = System.Drawing.Color.LightCoral;
-         this.textBox4.Location = new System.Drawing.Point(157, 224);
-         this.textBox4.Name = "textBox4";
-         this.textBox4.Size = new System.Drawing.Size(148, 20);
-         this.textBox4.TabIndex = 46;
+         this.txtboxName.BackColor = System.Drawing.Color.LightCoral;
+         this.txtboxName.Location = new System.Drawing.Point(157, 224);
+         this.txtboxName.Name = "txtboxName";
+         this.txtboxName.Size = new System.Drawing.Size(148, 20);
+         this.txtboxName.TabIndex = 46;
+         this.txtboxName.TextChanged += new System.EventHandler(this.txtboxName_TextChanged);
          // 
-         // textBox5
+         // txtboxInventory
          // 
-         this.textBox5.BackColor = System.Drawing.Color.LightCoral;
-         this.textBox5.Location = new System.Drawing.Point(157, 272);
-         this.textBox5.Name = "textBox5";
-         this.textBox5.Size = new System.Drawing.Size(148, 20);
-         this.textBox5.TabIndex = 47;
+         this.txtboxInventory.BackColor = System.Drawing.Color.LightCoral;
+         this.txtboxInventory.Location = new System.Drawing.Point(157, 272);
+         this.txtboxInventory.Name = "txtboxInventory";
+         this.txtboxInventory.Size = new System.Drawing.Size(148, 20);
+         this.txtboxInventory.TabIndex = 47;
+         this.txtboxInventory.TextChanged += new System.EventHandler(this.txtboxInventory_TextChanged);
          // 
-         // textBox6
+         // txtboxPrice
          // 
-         this.textBox6.BackColor = System.Drawing.Color.LightCoral;
-         this.textBox6.Location = new System.Drawing.Point(157, 316);
-         this.textBox6.Name = "textBox6";
-         this.textBox6.Size = new System.Drawing.Size(148, 20);
-         this.textBox6.TabIndex = 48;
+         this.txtboxPrice.BackColor = System.Drawing.Color.LightCoral;
+         this.txtboxPrice.Location = new System.Drawing.Point(157, 316);
+         this.txtboxPrice.Name = "txtboxPrice";
+         this.txtboxPrice.Size = new System.Drawing.Size(148, 20);
+         this.txtboxPrice.TabIndex = 48;
+         this.txtboxPrice.TextChanged += new System.EventHandler(this.txtboxPrice_TextChanged);
          // 
          // ModifyProductForm
          // 
@@ -262,11 +272,11 @@
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.ClientSize = new System.Drawing.Size(992, 530);
          this.Controls.Add(this.txtboxMax);
-         this.Controls.Add(this.textBox6);
-         this.Controls.Add(this.textBox5);
-         this.Controls.Add(this.textBox4);
-         this.Controls.Add(this.textBox3);
-         this.Controls.Add(this.textBox2);
+         this.Controls.Add(this.txtboxPrice);
+         this.Controls.Add(this.txtboxInventory);
+         this.Controls.Add(this.txtboxName);
+         this.Controls.Add(this.txtboxID);
+         this.Controls.Add(this.txtboxMin);
          this.Controls.Add(this.label18);
          this.Controls.Add(this.label17);
          this.Controls.Add(this.label16);
@@ -275,19 +285,19 @@
          this.Controls.Add(this.label7);
          this.Controls.Add(this.label6);
          this.Controls.Add(this.label5);
-         this.Controls.Add(this.button5);
-         this.Controls.Add(this.textBox1);
-         this.Controls.Add(this.dataGridView3);
-         this.Controls.Add(this.dataGridView1);
-         this.Controls.Add(this.button4);
-         this.Controls.Add(this.button3);
-         this.Controls.Add(this.button2);
-         this.Controls.Add(this.button1);
+         this.Controls.Add(this.btnSearch);
+         this.Controls.Add(this.txtboxSearch);
+         this.Controls.Add(this.dgvAssociatedParts);
+         this.Controls.Add(this.dgvCandidateParts);
+         this.Controls.Add(this.btnAdd);
+         this.Controls.Add(this.btnCancel);
+         this.Controls.Add(this.btnSave);
+         this.Controls.Add(this.btnDelete);
          this.Controls.Add(this.label4);
          this.Name = "ModifyProductForm";
          this.Text = "Product";
-         ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-         ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.dgvCandidateParts)).EndInit();
+         ((System.ComponentModel.ISupportInitialize)(this.dgvAssociatedParts)).EndInit();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -297,14 +307,14 @@
 
       private System.Windows.Forms.TextBox txtboxMax;
       private System.Windows.Forms.Label label4;
-      private System.Windows.Forms.Button button1;
-      private System.Windows.Forms.Button button2;
-      private System.Windows.Forms.Button button3;
-      private System.Windows.Forms.Button button4;
-      private System.Windows.Forms.DataGridView dataGridView1;
-      private System.Windows.Forms.DataGridView dataGridView3;
-      private System.Windows.Forms.TextBox textBox1;
-      private System.Windows.Forms.Button button5;
+      private System.Windows.Forms.Button btnDelete;
+      private System.Windows.Forms.Button btnSave;
+      private System.Windows.Forms.Button btnCancel;
+      private System.Windows.Forms.Button btnAdd;
+      private System.Windows.Forms.DataGridView dgvCandidateParts;
+      private System.Windows.Forms.DataGridView dgvAssociatedParts;
+      private System.Windows.Forms.TextBox txtboxSearch;
+      private System.Windows.Forms.Button btnSearch;
       private System.Windows.Forms.Label label5;
       private System.Windows.Forms.Label label6;
       private System.Windows.Forms.Label label7;
@@ -313,10 +323,10 @@
       private System.Windows.Forms.Label label16;
       private System.Windows.Forms.Label label17;
       private System.Windows.Forms.Label label18;
-      private System.Windows.Forms.TextBox textBox2;
-      private System.Windows.Forms.TextBox textBox3;
-      private System.Windows.Forms.TextBox textBox4;
-      private System.Windows.Forms.TextBox textBox5;
-      private System.Windows.Forms.TextBox textBox6;
+      private System.Windows.Forms.TextBox txtboxMin;
+      private System.Windows.Forms.TextBox txtboxID;
+      private System.Windows.Forms.TextBox txtboxName;
+      private System.Windows.Forms.TextBox txtboxInventory;
+      private System.Windows.Forms.TextBox txtboxPrice;
    }
 }

@@ -36,13 +36,13 @@
          this.btnDeleteProducts = new System.Windows.Forms.Button();
          this.btnExit = new System.Windows.Forms.Button();
          this.btnSearchParts = new System.Windows.Forms.Button();
-         this.textBox3 = new System.Windows.Forms.TextBox();
+         this.txtboxSearchParts = new System.Windows.Forms.TextBox();
          this.label1 = new System.Windows.Forms.Label();
          this.label2 = new System.Windows.Forms.Label();
          this.label3 = new System.Windows.Forms.Label();
          this.dgvParts = new System.Windows.Forms.DataGridView();
          this.btnSearchProducts = new System.Windows.Forms.Button();
-         this.textBox1 = new System.Windows.Forms.TextBox();
+         this.txtboxSearchProducts = new System.Windows.Forms.TextBox();
          this.dgvProducts = new System.Windows.Forms.DataGridView();
          ((System.ComponentModel.ISupportInitialize)(this.dgvParts)).BeginInit();
          ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
@@ -136,12 +136,12 @@
          this.btnSearchParts.UseVisualStyleBackColor = false;
          this.btnSearchParts.Click += new System.EventHandler(this.btnSearchParts_Click);
          // 
-         // textBox3
+         // txtboxSearchParts
          // 
-         this.textBox3.Location = new System.Drawing.Point(366, 79);
-         this.textBox3.Name = "textBox3";
-         this.textBox3.Size = new System.Drawing.Size(132, 20);
-         this.textBox3.TabIndex = 14;
+         this.txtboxSearchParts.Location = new System.Drawing.Point(366, 79);
+         this.txtboxSearchParts.Name = "txtboxSearchParts";
+         this.txtboxSearchParts.Size = new System.Drawing.Size(132, 20);
+         this.txtboxSearchParts.TabIndex = 14;
          // 
          // label1
          // 
@@ -192,12 +192,12 @@
          this.btnSearchProducts.UseVisualStyleBackColor = false;
          this.btnSearchProducts.Click += new System.EventHandler(this.btnSearchProducts_Click);
          // 
-         // textBox1
+         // txtboxSearchProducts
          // 
-         this.textBox1.Location = new System.Drawing.Point(937, 79);
-         this.textBox1.Name = "textBox1";
-         this.textBox1.Size = new System.Drawing.Size(132, 20);
-         this.textBox1.TabIndex = 20;
+         this.txtboxSearchProducts.Location = new System.Drawing.Point(937, 79);
+         this.txtboxSearchProducts.Name = "txtboxSearchProducts";
+         this.txtboxSearchProducts.Size = new System.Drawing.Size(132, 20);
+         this.txtboxSearchProducts.TabIndex = 20;
          // 
          // dgvProducts
          // 
@@ -214,13 +214,13 @@
          this.AutoSize = true;
          this.ClientSize = new System.Drawing.Size(1081, 541);
          this.Controls.Add(this.dgvProducts);
-         this.Controls.Add(this.textBox1);
+         this.Controls.Add(this.txtboxSearchProducts);
          this.Controls.Add(this.btnSearchProducts);
          this.Controls.Add(this.dgvParts);
          this.Controls.Add(this.label3);
          this.Controls.Add(this.label2);
          this.Controls.Add(this.label1);
-         this.Controls.Add(this.textBox3);
+         this.Controls.Add(this.txtboxSearchParts);
          this.Controls.Add(this.btnSearchParts);
          this.Controls.Add(this.btnExit);
          this.Controls.Add(this.btnDeleteProducts);
@@ -248,13 +248,13 @@
       private System.Windows.Forms.Button btnDeleteProducts;
       private System.Windows.Forms.Button btnExit;
       private System.Windows.Forms.Button btnSearchParts;
-      private System.Windows.Forms.TextBox textBox3;
+      private System.Windows.Forms.TextBox txtboxSearchParts;
       private System.Windows.Forms.Label label1;
       private System.Windows.Forms.Label label2;
       private System.Windows.Forms.Label label3;
       private System.Windows.Forms.DataGridView dgvParts;
       private System.Windows.Forms.Button btnSearchProducts;
-      private System.Windows.Forms.TextBox textBox1;
+      private System.Windows.Forms.TextBox txtboxSearchProducts;
       private System.Windows.Forms.DataGridView dgvProducts;
    }
 }

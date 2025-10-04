@@ -222,6 +222,13 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnSave_Click(object sender, EventArgs e)
       {
+         if (_associated == null || _associated.Count == 0)
+         {
+            MessageBox.Show("Product must have at least one associated part.",
+                            "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+         }
+
          // Ensure the form is valid before sending data off
          if (!IsFormValid(out ProductInput input, out string errorMessage))
          {
@@ -229,6 +236,11 @@ namespace InventoryManagement
             return;
          }
          this.SetProductInput(input);
+
+         foreach(var part in _associated)
+         {
+            NewProduct.AddAssociatedPart(part);
+         }
 
          this.DialogResult = DialogResult.OK;
          this.Close();
@@ -354,6 +366,29 @@ namespace InventoryManagement
          }
 
          _associated.Add(selectedPart);
+      }
+
+      private void btnSearch_Click(object sender, EventArgs e)
+      {
+         string q = txtboxSearch.Text.Trim();
+         Part hit = int.TryParse(q, out var id)
+             ? Inventory.LookupPart(id)
+             : Inventory.FindPartsByName(q).FirstOrDefault();
+
+         SelectInGrid(dgvCandidateParts, hit, "No matching part found.");
+      }
+
+      private void SelectInGrid(DataGridView dgv, object item, string msg)
+      {
+         if (item == null) { MessageBox.Show(msg); return; }
+         var list = (System.Collections.IList)dgv.DataSource;  
+         int idx = list.IndexOf(item);
+         if (idx < 0) { MessageBox.Show(msg); return; }
+
+         dgv.ClearSelection();
+         dgv.Rows[idx].Selected = true;
+         dgv.CurrentCell = dgv.Rows[idx].Cells[0];
+         dgv.FirstDisplayedScrollingRowIndex = idx;
       }
    }
 }

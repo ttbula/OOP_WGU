@@ -20,6 +20,41 @@ namespace InventoryManagement.Models
       private static int _nextPartID = 1;
       private static int _nextProductID = 1;
 
+      public static Part LookupPart(int id)
+      {
+         return AllParts.FirstOrDefault(p => p.ID == id);
+      }
+
+      public static Product LookupProduct(int id)
+      {
+         return Products.FirstOrDefault(p => p.ProductID == id);
+      }
+
+      public static IEnumerable<Part> FindPartsByName(string name) =>
+         AllParts.Where(p => p.Name?.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
+
+      public static IEnumerable<Product> FindProductsByName(string name) =>
+         Products.Where(pr => pr.Name?.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0);
+
+      public static bool IsPartAssociated(int partId) =>
+         Products.Any(prod => prod.AssociatedParts.Any(p => p.ID == partId));
+
+      public static bool RemovePart(int id)
+      {
+         if (IsPartAssociated(id))
+         {
+            return false;
+         }
+         var partToRemove = AllParts.FirstOrDefault(p => p.ID == id);
+
+         if (partToRemove == null)
+         {
+            return false;
+         }
+         AllParts.Remove(partToRemove);
+         return true;
+      }
+
       public static int GetNextPartID()
       {
          int returnedID = _nextPartID;
@@ -70,16 +105,42 @@ namespace InventoryManagement.Models
          }
       }
 
-      // eventually want this to have out string reason
-      public static bool RemovePart(int id)
+      public static void SeedData()
       {
-         var partToRemove = AllParts.FirstOrDefault(p => p.ID == id);
-         if (partToRemove != null)
+         // Seed Parts
+         AllParts.Add(new Inhouse(GetNextPartID(), "Wheel", 15, 12m, 0, 18, 2268));
+         AllParts.Add(new Inhouse(GetNextPartID(), "Frame", 5, 55m, 0, 10, 4455));
+         AllParts.Add(new Outsourced(GetNextPartID(), "Bolt", 100, 0.25m, 0, 1000, "Acme Corp"));
+         AllParts.Add(new Outsourced(GetNextPartID(), "Pedal", 25, 7.5m, 0, 50, "BikeParts Inc."));
+
+         // Seed Products
+         var bike = new Product
          {
-            AllParts.Remove(partToRemove);
-            return true;
-         }
-         return false;
+            ProductID = GetNextProductID(),
+            Name = "Mountain Bike",
+            InStock = 3,
+            Price = 199.99m,
+            Min = 0,
+            Max = 10
+         };
+
+         var scooter = new Product
+         {
+            ProductID = GetNextProductID(),
+            Name = "Scooter",
+            InStock = 7,
+            Price = 89.99m,
+            Min = 0,
+            Max = 20
+         };
+
+         // Associate parts with products
+         bike.AddAssociatedPart(AllParts[0]);    // Wheel
+         bike.AddAssociatedPart(AllParts[1]);    // Frame
+         scooter.AddAssociatedPart(AllParts[2]); // Bolt
+
+         Products.Add(bike);
+         Products.Add(scooter);
       }
       
    }

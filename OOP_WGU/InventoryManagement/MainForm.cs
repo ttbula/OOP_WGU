@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InventoryManagement.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using InventoryManagement.Models;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace InventoryManagement
 {
@@ -71,6 +72,24 @@ namespace InventoryManagement
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
+      private void btnModifyProducts_Click(object sender, EventArgs e)
+      {
+         if (dgvProducts.CurrentRow != null && dgvProducts.CurrentRow.DataBoundItem is Product selectedProduct)
+         {
+            ModifyProductForm modifyProduct = new ModifyProductForm(selectedProduct);
+            if (modifyProduct.ShowDialog() == DialogResult.OK)
+            {  
+               var updated = modifyProduct.ModifiedProduct;
+               Inventory.UpdateProduct(updated.ProductID, updated);
+            }
+         }
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void btnDeleteParts_Click(object sender, EventArgs e)
       {
          var part = dgvParts.CurrentRow?.DataBoundItem as Part;
@@ -80,16 +99,32 @@ namespace InventoryManagement
             return;
          }
 
-         var result = MessageBox.Show("Are you sure you want to delete the part?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-         if (result == DialogResult.Yes)
+         if (MessageBox.Show("Delete selected part?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
          {
-            // eventually this will need to have out string reason
-            if (!Inventory.RemovePart(part.ID))
-            {
-               MessageBox.Show("");
-            }
+            return;
          }
-         
+         Inventory.RemovePart(part.ID);
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void btnDeleteProducts_Click(object sender, EventArgs e)
+      {
+         var prod = dgvProducts.CurrentRow?.DataBoundItem as Product;
+         if (prod == null) 
+         {
+            MessageBox.Show("Select a product."); 
+            return; 
+         }
+         if (MessageBox.Show("Delete selected product?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+         {
+            return;
+         }
+
+         Inventory.RemoveProduct(prod.ProductID);
       }
 
       /// <summary>
@@ -99,7 +134,23 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnSearchParts_Click(object sender, EventArgs e)
       {
-         MessageBox.Show("Search Parts");
+         string q = txtboxSearchParts.Text.Trim();
+         Part hit = int.TryParse(q, out var id) ? Inventory.LookupPart(id)
+                                                : Inventory.FindPartsByName(q).FirstOrDefault();
+         SelectRow(dgvParts, hit, "No matching part found.");
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void btnSearchProducts_Click(object sender, EventArgs e)
+      {
+         string q = txtboxSearchProducts.Text.Trim();
+         Product hit = int.TryParse(q, out var id) ? Inventory.LookupProduct(id)
+                                                   : Inventory.FindProductsByName(q).FirstOrDefault();
+         SelectRow(dgvProducts, hit, "No matching product found.");
       }
 
       /// <summary>
@@ -112,46 +163,8 @@ namespace InventoryManagement
          AddProductForm addProduct = new AddProductForm();
          if (addProduct.ShowDialog() == DialogResult.OK)
          {
-            //Inventory.UpdateProduct();
+            Inventory.AddProduct(addProduct.NewProduct);
          }
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void btnModifyProducts_Click(object sender, EventArgs e)
-      {
-         if (dgvParts.CurrentRow != null && dgvParts.CurrentRow.DataBoundItem is Part selectedPart)
-         {
-            ModifyProductForm modifyProduct = new ModifyProductForm();
-            if (modifyProduct.ShowDialog() == DialogResult.OK)
-            {
-               //var updated = modifyProduct.ModifiedPart;
-               //Inventory.UpdateProduct(updated.ID, updated);
-            }
-         }
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void btnDeleteProducts_Click(object sender, EventArgs e)
-      {
-         MessageBox.Show("Delete Products");
-      }
-
-      /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void btnSearchProducts_Click(object sender, EventArgs e)
-      {
-         MessageBox.Show("Search Products");
       }
 
       /// <summary>
@@ -162,6 +175,18 @@ namespace InventoryManagement
       private void btnExit_Click(object sender, EventArgs e)
       {
          this.Close();
+      }
+
+      private void SelectRow(DataGridView dgv, object item, string msg)
+      {
+         if (item == null) { MessageBox.Show(msg); return; }
+         var list = (System.Collections.IList)dgv.DataSource;
+         int i = list.IndexOf(item);
+         if (i < 0) { MessageBox.Show(msg); return; }
+         dgv.ClearSelection();
+         dgv.Rows[i].Selected = true;
+         dgv.CurrentCell = dgv.Rows[i].Cells[0];
+         dgv.FirstDisplayedScrollingRowIndex = i;
       }
    }
 }
