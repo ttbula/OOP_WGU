@@ -76,7 +76,7 @@
          // 
          // btnDelete
          // 
-         this.btnDelete.Location = new System.Drawing.Point(804, 420);
+         this.btnDelete.Location = new System.Drawing.Point(786, 479);
          this.btnDelete.Name = "btnDelete";
          this.btnDelete.Size = new System.Drawing.Size(59, 39);
          this.btnDelete.TabIndex = 28;
@@ -86,7 +86,7 @@
          // 
          // btnSave
          // 
-         this.btnSave.Location = new System.Drawing.Point(708, 465);
+         this.btnSave.Location = new System.Drawing.Point(721, 479);
          this.btnSave.Name = "btnSave";
          this.btnSave.Size = new System.Drawing.Size(59, 39);
          this.btnSave.TabIndex = 29;
@@ -96,7 +96,7 @@
          // 
          // btnCancel
          // 
-         this.btnCancel.Location = new System.Drawing.Point(804, 465);
+         this.btnCancel.Location = new System.Drawing.Point(851, 479);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(59, 39);
          this.btnCancel.TabIndex = 30;
@@ -106,7 +106,7 @@
          // 
          // btnAdd
          // 
-         this.btnAdd.Location = new System.Drawing.Point(804, 234);
+         this.btnAdd.Location = new System.Drawing.Point(851, 246);
          this.btnAdd.Name = "btnAdd";
          this.btnAdd.Size = new System.Drawing.Size(59, 39);
          this.btnAdd.TabIndex = 31;
@@ -117,9 +117,9 @@
          // dgvCandidateParts
          // 
          this.dgvCandidateParts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         this.dgvCandidateParts.Location = new System.Drawing.Point(490, 111);
+         this.dgvCandidateParts.Location = new System.Drawing.Point(490, 100);
          this.dgvCandidateParts.Name = "dgvCandidateParts";
-         this.dgvCandidateParts.Size = new System.Drawing.Size(420, 97);
+         this.dgvCandidateParts.Size = new System.Drawing.Size(420, 144);
          this.dgvCandidateParts.TabIndex = 32;
          // 
          // dgvAssociatedParts
@@ -127,7 +127,7 @@
          this.dgvAssociatedParts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
          this.dgvAssociatedParts.Location = new System.Drawing.Point(490, 301);
          this.dgvAssociatedParts.Name = "dgvAssociatedParts";
-         this.dgvAssociatedParts.Size = new System.Drawing.Size(420, 97);
+         this.dgvAssociatedParts.Size = new System.Drawing.Size(420, 146);
          this.dgvAssociatedParts.TabIndex = 33;
          // 
          // txtboxSearch

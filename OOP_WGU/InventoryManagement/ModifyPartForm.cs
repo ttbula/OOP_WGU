@@ -317,16 +317,34 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnSave_Click(object sender, EventArgs e)
       {
-         // Ensure the form is valid before sending data off
-         if (!IsFormValid(out ModifiedPartInput input, out string errorMessage))
+         try
          {
-            MessageBox.Show($"{errorMessage}. Please review the form before resubmitting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
-         }
-         this.SetPartInput(input);
+            // Ensure the form is valid before sending data off
+            if (!IsFormValid(out ModifiedPartInput input, out string errorMessage))
+            {
+               MessageBox.Show($"{errorMessage}. Please review the form before resubmitting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+               return;
+            }
+            this.SetPartInput(input);
 
-         this.DialogResult = DialogResult.OK;
-         this.Close();
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+         }
+         catch (FormatException ex)
+         {
+            MessageBox.Show($"Input format error: {ex.Message}",
+                            "Invalid Entry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+         }
+         catch (InvalidOperationException ex)
+         {
+            MessageBox.Show($"Operation error: {ex.Message}",
+                            "Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
+         catch (Exception ex)
+         {
+            MessageBox.Show($"Unexpected error: {ex.Message}",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
       }
 
       /// <summary>

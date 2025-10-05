@@ -63,7 +63,7 @@
          // rbInHouse
          // 
          this.rbInHouse.AutoSize = true;
-         this.rbInHouse.BackColor = System.Drawing.SystemColors.ControlDark;
+         this.rbInHouse.BackColor = System.Drawing.SystemColors.Control;
          this.rbInHouse.Location = new System.Drawing.Point(223, 24);
          this.rbInHouse.Name = "rbInHouse";
          this.rbInHouse.Size = new System.Drawing.Size(68, 17);
@@ -76,7 +76,7 @@
          // rbOutsourced
          // 
          this.rbOutsourced.AutoSize = true;
-         this.rbOutsourced.BackColor = System.Drawing.SystemColors.ControlDark;
+         this.rbOutsourced.BackColor = System.Drawing.SystemColors.Control;
          this.rbOutsourced.Location = new System.Drawing.Point(390, 24);
          this.rbOutsourced.Name = "rbOutsourced";
          this.rbOutsourced.Size = new System.Drawing.Size(80, 17);
@@ -250,7 +250,7 @@
          // 
          // btnCancel
          // 
-         this.btnCancel.BackColor = System.Drawing.SystemColors.ControlDark;
+         this.btnCancel.BackColor = System.Drawing.SystemColors.Control;
          this.btnCancel.Location = new System.Drawing.Point(510, 366);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(75, 45);
@@ -261,7 +261,7 @@
          // 
          // btnSave
          // 
-         this.btnSave.BackColor = System.Drawing.SystemColors.ControlDark;
+         this.btnSave.BackColor = System.Drawing.SystemColors.Control;
          this.btnSave.Location = new System.Drawing.Point(411, 366);
          this.btnSave.Name = "btnSave";
          this.btnSave.Size = new System.Drawing.Size(75, 45);
@@ -275,7 +275,7 @@
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
          this.AutoSize = true;
-         this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+         this.BackColor = System.Drawing.SystemColors.Control;
          this.ClientSize = new System.Drawing.Size(609, 450);
          this.Controls.Add(this.btnSave);
          this.Controls.Add(this.btnCancel);

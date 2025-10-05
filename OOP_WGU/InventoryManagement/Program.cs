@@ -17,7 +17,6 @@ namespace InventoryManagement
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         Inventory.SeedData();
          Application.Run(new MainForm());
       }
    }

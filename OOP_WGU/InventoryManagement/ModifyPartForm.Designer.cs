@@ -53,7 +53,7 @@
          // 
          // btnSave
          // 
-         this.btnSave.BackColor = System.Drawing.SystemColors.ControlDark;
+         this.btnSave.BackColor = System.Drawing.SystemColors.Control;
          this.btnSave.Location = new System.Drawing.Point(508, 374);
          this.btnSave.Name = "btnSave";
          this.btnSave.Size = new System.Drawing.Size(75, 45);
@@ -64,7 +64,7 @@
          // 
          // btnCancel
          // 
-         this.btnCancel.BackColor = System.Drawing.SystemColors.ControlDark;
+         this.btnCancel.BackColor = System.Drawing.SystemColors.Control;
          this.btnCancel.Location = new System.Drawing.Point(607, 374);
          this.btnCancel.Name = "btnCancel";
          this.btnCancel.Size = new System.Drawing.Size(75, 45);
@@ -212,7 +212,7 @@
          // rbOutsourced
          // 
          this.rbOutsourced.AutoSize = true;
-         this.rbOutsourced.BackColor = System.Drawing.SystemColors.ControlDark;
+         this.rbOutsourced.BackColor = System.Drawing.SystemColors.Control;
          this.rbOutsourced.Location = new System.Drawing.Point(487, 32);
          this.rbOutsourced.Name = "rbOutsourced";
          this.rbOutsourced.Size = new System.Drawing.Size(80, 17);
@@ -225,7 +225,7 @@
          // rbInHouse
          // 
          this.rbInHouse.AutoSize = true;
-         this.rbInHouse.BackColor = System.Drawing.SystemColors.ControlDark;
+         this.rbInHouse.BackColor = System.Drawing.SystemColors.Control;
          this.rbInHouse.Location = new System.Drawing.Point(320, 32);
          this.rbInHouse.Name = "rbInHouse";
          this.rbInHouse.Size = new System.Drawing.Size(68, 17);
@@ -256,6 +256,7 @@
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+         this.BackColor = System.Drawing.SystemColors.Control;
          this.ClientSize = new System.Drawing.Size(800, 450);
          this.Controls.Add(this.lblMachineID);
          this.Controls.Add(this.txtboxMachineID);

@@ -22,6 +22,7 @@ namespace InventoryManagement
 
          txtboxID.Text = original.ProductID.ToString();
          txtboxName.Text = original.Name;
+         txtboxID.ReadOnly = true;
          txtboxInventory.Text = original.InStock.ToString();
          txtboxPrice.Text = original.Price.ToString();
          txtboxMax.Text = original.Max.ToString();
@@ -228,30 +229,48 @@ namespace InventoryManagement
       /// <param name="e"></param>
       private void btnSave_Click(object sender, EventArgs e)
       {
-         if (_workingAssociated == null || _workingAssociated.Count == 0)
+         try
          {
-            MessageBox.Show("Product must have at least one associated part.",
-                            "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-         }
+            if (_workingAssociated == null || _workingAssociated.Count == 0)
+            {
+               MessageBox.Show("Product must have at least one associated part.",
+                               "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+               return;
+            }
 
-         // Ensure the form is valid before sending data off
-         if (!IsFormValid(out ModifiedProductInput input, out string errorMessage))
+            // Ensure the form is valid before sending data off
+            if (!IsFormValid(out ModifiedProductInput input, out string errorMessage))
+            {
+               MessageBox.Show($"{errorMessage}. Please review the form before resubmitting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+               return;
+            }
+
+            input.ProductID = _original.ProductID;
+            this.SetProductInput(input);
+
+            foreach (var part in _workingAssociated)
+            {
+               ModifiedProduct.AddAssociatedPart(part);
+            }
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+         }
+         catch (FormatException ex)
          {
-            MessageBox.Show($"{errorMessage}. Please review the form before resubmitting", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
+            MessageBox.Show($"Input format error: {ex.Message}",
+                            "Invalid Entry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
          }
-
-         input.ProductID = _original.ProductID;
-         this.SetProductInput(input);
-
-         foreach (var part in _workingAssociated)
+         catch (InvalidOperationException ex)
          {
-            ModifiedProduct.AddAssociatedPart(part);
+            MessageBox.Show($"Operation error: {ex.Message}",
+                            "Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
          }
-
-         this.DialogResult = DialogResult.OK;
-         this.Close();
+         catch (Exception ex)
+         {
+            MessageBox.Show($"Unexpected error: {ex.Message}",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+         }
       }
 
       /// <summary>
@@ -350,6 +369,11 @@ namespace InventoryManagement
          }
       }
 
+      /// <summary>
+      /// Removes the selected part from the associated parts list (bottom grid).
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param> 
       private void btnDelete_Click(object sender, EventArgs e)
       {
          if (dgvAssociatedParts.CurrentRow?.DataBoundItem is Part selectedPart)
@@ -358,6 +382,12 @@ namespace InventoryManagement
          }
       }
 
+      /// <summary>
+      /// Adds a selected part from the candidate parts grid (top grid)
+      /// to the associated parts list (bottom grid).
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param> 
       private void btnAdd_Click(object sender, EventArgs e)
       {
          var selectedPart = dgvCandidateParts.CurrentRow?.DataBoundItem as Part;
@@ -376,6 +406,12 @@ namespace InventoryManagement
          _workingAssociated.Add(selectedPart);
       }
 
+      /// <summary>
+      /// Searches for a part by ID or name in the candidate parts grid.
+      /// Highlights the match if found, or shows a message if not.
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param> 
       private void btnSearch_Click(object sender, EventArgs e)
       {
          string q = txtboxSearch.Text.Trim();
@@ -386,6 +422,13 @@ namespace InventoryManagement
          SelectInGrid(dgvCandidateParts, hit, "No matching part found.");
       }
 
+      /// <summary>
+      /// Highlights the specified item in a DataGridView if it exists.
+      /// Displays a message if the item is not found.
+      /// </summary>
+      /// <param name="dgv">The DataGridView to search within.</param>
+      /// <param name="item">The object to locate and select.</param>
+      /// <param name="msg">The message shown if the item is not found.</param>
       private void SelectInGrid(DataGridView dgv, object item, string msg)
       {
          if (item == null) { MessageBox.Show(msg); return; }

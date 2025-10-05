@@ -27,6 +27,7 @@ namespace InventoryManagement
 
       private void MainForm_Load(object sender, EventArgs e)
       {
+         Inventory.SeedData();
          LoadData();
       }
 
@@ -46,7 +47,21 @@ namespace InventoryManagement
       }
 
       /// <summary>
-      /// 
+      /// Takes user to Add Product Form Page
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void btnAddProducts_Click(object sender, EventArgs e)
+      {
+         AddProductForm addProduct = new AddProductForm();
+         if (addProduct.ShowDialog() == DialogResult.OK)
+         {
+            Inventory.AddProduct(addProduct.NewProduct);
+         }
+      }
+
+      /// <summary>
+      /// Takes user to Modify Part Form Page
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -68,7 +83,7 @@ namespace InventoryManagement
       }
 
       /// <summary>
-      /// 
+      /// Takes user to Modify Products Page
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -86,7 +101,7 @@ namespace InventoryManagement
       }
 
       /// <summary>
-      /// 
+      /// Deletes the currently selected part
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -99,15 +114,22 @@ namespace InventoryManagement
             return;
          }
 
-         if (MessageBox.Show("Delete selected part?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+         if (MessageBox.Show("Delete selected part?", "Confirm",
+                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
          {
             return;
          }
-         Inventory.RemovePart(part.ID);
+
+         bool removed = Inventory.RemovePart(part.ID);
+         if (!removed)
+         {
+            MessageBox.Show("Cannot delete a part that is associated with a product.",
+                            "Delete Blocked", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+         }
       }
 
       /// <summary>
-      /// 
+      /// Deletes the currently selected product
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -128,7 +150,7 @@ namespace InventoryManagement
       }
 
       /// <summary>
-      /// 
+      /// Searches all parts for an ID or name
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -141,7 +163,7 @@ namespace InventoryManagement
       }
 
       /// <summary>
-      /// 
+      /// Searches all products for an ID or name
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -154,21 +176,7 @@ namespace InventoryManagement
       }
 
       /// <summary>
-      /// 
-      /// </summary>
-      /// <param name="sender"></param>
-      /// <param name="e"></param>
-      private void btnAddProducts_Click(object sender, EventArgs e)
-      {
-         AddProductForm addProduct = new AddProductForm();
-         if (addProduct.ShowDialog() == DialogResult.OK)
-         {
-            Inventory.AddProduct(addProduct.NewProduct);
-         }
-      }
-
-      /// <summary>
-      /// 
+      /// Exits the UI
       /// </summary>
       /// <param name="sender"></param>
       /// <param name="e"></param>
@@ -177,6 +185,12 @@ namespace InventoryManagement
          this.Close();
       }
 
+      /// <summary>
+      /// Highlights a specific item in a DataGridView if it exists in the bound list.
+      /// </summary>
+      /// <param name="dgv">The DataGridView to search within.</param>
+      /// <param name="item">The item to locate and select.</param>
+      /// <param name="msg">Message to display if the item is not found.</param>
       private void SelectRow(DataGridView dgv, object item, string msg)
       {
          if (item == null) { MessageBox.Show(msg); return; }
